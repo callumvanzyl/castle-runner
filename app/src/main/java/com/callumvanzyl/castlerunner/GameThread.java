@@ -1,60 +1,86 @@
 package com.callumvanzyl.castlerunner;
 
-import android.content.Context;
 import android.graphics.Canvas;
-import android.view.SurfaceHolder;
+import android.graphics.Color;
+import android.util.Log;
 
-import java.util.logging.Handler;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
-class GameThread extends Thread {
+class GameThread implements Runnable {
 
-    private enum STATE {
-        RUNNING,
-        PAUSED
-    }
+    private static final int TARGET_MSPF = 16;
 
-    private GameView gameView;
-    private SurfaceHolder surfaceHolder;
-    private Context context;
-    private Handler messageHandler;
+    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
-    private STATE state;
+    private GameContext gameContext;
 
     private boolean isRunning;
+    private long previousTime;
 
-    private long elapsed;
-    private long now;
+    private volatile ScheduledFuture<?> self;
 
-    GameThread(GameView gameView) {
-        this.gameView = gameView;
-        this.surfaceHolder = gameView.getHolder();
-        this.context = gameView.getContext();
-        this.messageHandler = gameView.getMessageHandler();
+    GameThread(GameContext gameContext) {
+        this.gameContext = gameContext;
+        this.isRunning = false;
+    }
+
+    void startGame() {
+        Log.d("CR-ACTIONS", "GameThread has invoked startGame");
+
+        this.isRunning = true;
+        this.self = executor.scheduleAtFixedRate(this, 0, TARGET_MSPF, TimeUnit.MILLISECONDS);
+    }
+
+    void pauseGame() {
+        Log.d("CR-ACTIONS", "GameThread has invoked pauseGame");
+
+        isRunning = false;
+    }
+
+    void resumeGame() {
+        Log.d("CR-ACTIONS", "GameThread has invoked resumeGame");
 
         isRunning = true;
     }
 
-    private void doDraw(Canvas canvas) {
-        if (canvas != null) {
+    private void drawGame(Canvas canvas) {
+        Log.d("CR-ACTIONS", "GameThread has invoked drawGame");
 
+        if (canvas != null) {
+            canvas.drawColor(Color.rgb(100, 149, 237));
         }
+    }
+
+    private void updateGame() {
+        Log.d("CR-ACTIONS", "GameThread has invoked updateGame");
+
+        long currentTime = System.nanoTime();
+        float deltaTime = (float) (currentTime - previousTime)/1000000;
+
+        Log.d("CR-PERFORMANCE", "Time since last update: " + Float.toString(deltaTime) + " ms");
+
+        previousTime = currentTime;
     }
 
     @Override
     public void run() {
-        while (isRunning) {
-            Canvas canvas = null;
+        Canvas canvas = null;
+        if (isRunning) {
+            updateGame();
+
             try {
-                canvas = surfaceHolder.lockCanvas(null);
-                synchronized (surfaceHolder) {
-                    if (state == STATE.RUNNING) {
-                        // Update code
+                canvas = gameContext.getSurfaceHolder().lockCanvas(null);
+                if (canvas != null) {
+                    synchronized (gameContext.getSurfaceHolder()) {
+                        drawGame(canvas);
                     }
                 }
-                doDraw(canvas);
             } finally {
                 if (canvas != null) {
-                    surfaceHolder.unlockCanvasAndPost(canvas);
+                    gameContext.getSurfaceHolder().unlockCanvasAndPost(canvas);
                 }
             }
         }
