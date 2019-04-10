@@ -6,12 +6,15 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-abstract class GameObject implements Drawable, Updateable {
+class GameObject implements Drawable, Updateable {
 
     private static BitmapCache SHARED_CACHE = null;
 
     private Bitmap sprite;
     private Rect surface;
+
+    private Vector2 position;
+    private Vector2 size;
 
     GameObject(Context context) {
         if (SHARED_CACHE == null) {
@@ -19,9 +22,11 @@ abstract class GameObject implements Drawable, Updateable {
             SHARED_CACHE = new BitmapCache(assetManager);
         }
 
+        setSprite("textures/placeholder.jpg");
         surface = new Rect();
 
-        setSprite("textures/placeholder.jpg");
+        position = Vector2.ZERO;
+        size = Vector2.ZERO;
     }
 
     @Override
@@ -34,16 +39,20 @@ abstract class GameObject implements Drawable, Updateable {
 
     }
 
-    void setPosition(int x, int y) {
-        surface.offsetTo(x, y);
+    public void setPosition(Vector2 position) {
+        surface.offsetTo(position.x, position.y);
+
+        this.position = position;
     }
 
-    void setSize(int w, int h) {
-        surface.right = surface.left + w;
-        surface.bottom = surface.top + h;
+    public void setSize(Vector2 size) {
+        surface.right = surface.left + size.x;
+        surface.bottom = surface.top + size.y;
+
+        this.size = size;
     }
 
-    void setSprite(String path) {
+    public void setSprite(String path) {
         this.sprite = SHARED_CACHE.get(path);
     }
 

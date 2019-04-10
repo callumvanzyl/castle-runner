@@ -3,6 +3,7 @@ package com.callumvanzyl.castlerunner;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ class BitmapCache {
         this.assetManager = assetManager;
     }
 
-    Bitmap get(String path) {
+    public Bitmap get(String path) {
         Bitmap cached = cache.get(path);
         if (cached != null) {
             return cached;
@@ -28,7 +29,9 @@ class BitmapCache {
                 Bitmap image = BitmapFactory.decodeStream(inputStream);
                 cache.put(path, image);
                 return image;
-            } catch (Exception ignored) {}
+            } catch (Exception error) {
+                Log.e("CR-ERRORS", "Invalid path", error);
+            }
         }
         return null;
     }

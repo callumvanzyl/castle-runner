@@ -16,6 +16,7 @@ class GameThread implements Runnable {
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     private GameContext gameContext;
+    private Vector2 screenSize;
 
     private boolean isRunning;
     private long previousTime;
@@ -24,14 +25,18 @@ class GameThread implements Runnable {
 
     GameThread(GameContext gameContext) {
         this.gameContext = gameContext;
-        this.isRunning = false;
+
+        isRunning = false;
     }
 
-    void startGame() {
+    void startGame(int width, int height) {
         Log.d("CR-ACTIONS", "GameThread has invoked startGame");
 
-        this.isRunning = true;
-        this.self = executor.scheduleAtFixedRate(this, 0, TARGET_MSPF, TimeUnit.MILLISECONDS);
+        screenSize = new Vector2(width, height);
+
+        isRunning = true;
+
+        self = executor.scheduleAtFixedRate(this, 0, TARGET_MSPF, TimeUnit.MILLISECONDS);
     }
 
     void pauseGame() {
@@ -40,8 +45,10 @@ class GameThread implements Runnable {
         isRunning = false;
     }
 
-    void resumeGame() {
+    void resumeGame(int width, int height) {
         Log.d("CR-ACTIONS", "GameThread has invoked resumeGame");
+
+        screenSize = new Vector2(width, height);
 
         isRunning = true;
     }
