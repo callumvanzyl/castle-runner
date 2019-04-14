@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -18,6 +19,10 @@ class GameThread implements Runnable {
     private GameContext gameContext;
     private Vector2 screenSize;
 
+    private ScrollingBackground background;
+
+    private ChunkManager chunkManager;
+
     private boolean isRunning;
     private long previousTime;
 
@@ -29,45 +34,57 @@ class GameThread implements Runnable {
         isRunning = false;
     }
 
-    void startGame(int width, int height) {
-        Log.d("CR-ACTIONS", "GameThread has invoked startGame");
+    public void startGame(int width, int height) {
+        Log.d("CR-GAMELOOP", "GameThread has invoked startGame");
 
         screenSize = new Vector2(width, height);
+
+        background = new ScrollingBackground(gameContext.getContext(), 25);
+        background.setSprite("textures/world/background/full.png");
+
+        chunkManager = new ChunkManager();
 
         isRunning = true;
 
         self = executor.scheduleAtFixedRate(this, 0, TARGET_MSPF, TimeUnit.MILLISECONDS);
     }
 
-    void pauseGame() {
-        Log.d("CR-ACTIONS", "GameThread has invoked pauseGame");
+    public void pauseGame() {
+        Log.d("CR-GAMELOOP", "GameThread has invoked pauseGame");
 
         isRunning = false;
     }
 
-    void resumeGame(int width, int height) {
-        Log.d("CR-ACTIONS", "GameThread has invoked resumeGame");
+    public void resumeGame(int width, int height) {
+        Log.d("CR-GAMELOOP", "GameThread has invoked resumeGame");
 
         screenSize = new Vector2(width, height);
+
+        background.changeScreenSize(screenSize);
+        chunkManager.changeScreenSize(screenSize);
 
         isRunning = true;
     }
 
     private void drawGame(Canvas canvas) {
-        Log.d("CR-ACTIONS", "GameThread has invoked drawGame");
+        Log.d("CR-GAMELOOP", "GameThread has invoked drawGame");
 
-        if (canvas != null) {
-            canvas.drawColor(Color.rgb(100, 149, 237));
-        }
+        canvas.drawColor(Color.rgb(100, 149, 237));
+
+        background.draw(canvas);
+        chunkManager.drawChunks(canvas);
     }
 
     private void updateGame() {
-        Log.d("CR-ACTIONS", "GameThread has invoked updateGame");
+        Log.d("CR-GAMELOOP", "GameThread has invoked updateGame");
 
         long currentTime = System.nanoTime();
         float deltaTime = (float) (currentTime - previousTime)/1000000;
 
         Log.d("CR-PERFORMANCE", "Time since last update: " + Float.toString(deltaTime) + " ms");
+
+        background.update(deltaTime);
+        chunkManager.updateChunks(deltaTime);
 
         previousTime = currentTime;
     }

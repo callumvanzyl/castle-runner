@@ -11,7 +11,7 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private boolean isGameInitialised;
 
-    public GameView(Context context) {
+    GameView(Context context) {
         super(context);
 
         SurfaceHolder holder = getHolder();

@@ -18,15 +18,19 @@ class BitmapCache {
         this.assetManager = assetManager;
     }
 
-    public Bitmap get(String path) {
+    Bitmap get(String path) {
         Bitmap cached = cache.get(path);
         if (cached != null) {
             return cached;
         } else {
-            InputStream inputStream = null;
+            InputStream inputStream;
             try {
                 inputStream = assetManager.open(path);
-                Bitmap image = BitmapFactory.decodeStream(inputStream);
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
+                Bitmap image = BitmapFactory.decodeStream(inputStream, null, options);
                 cache.put(path, image);
                 return image;
             } catch (Exception error) {

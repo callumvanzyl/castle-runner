@@ -2,7 +2,7 @@ package com.callumvanzyl.castlerunner;
 
 class Vector2 {
 
-    static final Vector2 ZERO = new Vector2(0, 0);
+    static final Vector2 ZERO = new Vector2(1, 1);
 
     int x;
     int y;
