@@ -6,17 +6,18 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 class GameObject implements Drawable, Updateable {
 
     private static BitmapCache SHARED_CACHE = null;
     private static Paint PIXEL_PAINT = null;
 
-    private Bitmap sprite;
-    private Rect surface;
-
     private Vector2 position;
     private Vector2 size;
+
+    private Bitmap sprite;
+    private Rect surface;
 
     GameObject(Context context) {
         if (SHARED_CACHE == null) {
@@ -31,11 +32,11 @@ class GameObject implements Drawable, Updateable {
             PIXEL_PAINT.setFilterBitmap(false);
         }
 
+        position = Vector2.ZERO;
+        size = Vector2.ONE;
+
         setSprite("textures/placeholder.jpg");
         surface = new Rect();
-
-        position = Vector2.ZERO;
-        size = Vector2.ZERO;
     }
 
     @Override

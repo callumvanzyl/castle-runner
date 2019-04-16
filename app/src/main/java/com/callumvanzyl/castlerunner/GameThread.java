@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -40,9 +39,10 @@ class GameThread implements Runnable {
         screenSize = new Vector2(width, height);
 
         background = new ScrollingBackground(gameContext.getContext(), 25);
+        background.changeScreenSize(screenSize);
         background.setSprite("textures/world/background/full.png");
 
-        chunkManager = new ChunkManager();
+        chunkManager = new ChunkManager(gameContext.getContext());
 
         isRunning = true;
 
@@ -83,8 +83,10 @@ class GameThread implements Runnable {
 
         Log.d("CR-PERFORMANCE", "Time since last update: " + Float.toString(deltaTime) + " ms");
 
-        background.update(deltaTime);
-        chunkManager.updateChunks(deltaTime);
+        if (deltaTime < 999) {
+            background.update(deltaTime);
+            chunkManager.updateChunks(deltaTime);
+        }
 
         previousTime = currentTime;
     }

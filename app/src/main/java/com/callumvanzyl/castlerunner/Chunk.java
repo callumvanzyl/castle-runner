@@ -3,17 +3,34 @@ package com.callumvanzyl.castlerunner;
 import android.graphics.Canvas;
 
 class Chunk {
-
-    private Vector2 origin;
     private Vector2 size;
 
     private ObjectBatch objectBatch;
 
     Chunk(Vector2 size) {
-        origin = Vector2.ZERO;
         this.size = size;
 
         objectBatch = new ObjectBatch();
+    }
+
+    public void addObject(GameObject object) {
+        objectBatch.addObject(object);
+    }
+
+    public Vector2 getMaxBounds() {
+        return objectBatch.getMaxBounds();
+    }
+
+    public Vector2 getMinBounds() {
+        return objectBatch.getMinBounds();
+    }
+
+    public void destroyChunk() {
+
+    }
+
+    public void offsetChunk(Vector2 offset) {
+        objectBatch.offsetBatch(offset);
     }
 
     public void drawChunk(Canvas canvas) {
@@ -22,10 +39,6 @@ class Chunk {
 
     public void updateChunk(float deltaTime) {
         objectBatch.updateBatch(deltaTime);
-    }
-
-    public void setOrigin(Vector2 origin) {
-        this.origin = origin;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.callumvanzyl.castlerunner;
 
 import android.graphics.Canvas;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -14,6 +15,47 @@ class ObjectBatch {
 
     public void addObject(GameObject object) {
         objects.add(object);
+    }
+
+    public void offsetBatch(Vector2 offset) {
+        for (GameObject object: objects) {
+            Vector2 currentPosition = object.getPosition();
+            object.setPosition(currentPosition.add(offset));
+        }
+    }
+
+    public Vector2 getMaxBounds() {
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
+
+        for (GameObject object: objects) {
+            Vector2 position = object.getPosition();
+            if (position.x > maxX) {
+                maxX = position.x;
+            }
+            if (position.y > maxY) {
+                maxY = position.y;
+            }
+        }
+
+        return new Vector2(maxX, maxY);
+    }
+
+    public Vector2 getMinBounds() {
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+
+        for (GameObject object: objects) {
+            Vector2 position = object.getPosition();
+            if (position.x < minX) {
+                minX = position.x;
+            }
+            if (position.y < minY) {
+                minY = position.y;
+            }
+        }
+
+        return new Vector2(minX, minY);
     }
 
     public void drawBatch(Canvas canvas) {
