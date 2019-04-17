@@ -56,6 +56,8 @@ class ChunkBuilder {
             }
 
             try {
+                int tileSize = ChunkManager.getTileSize();
+
                 int width = Integer.parseInt(all.get(0));
                 int height = Integer.parseInt(all.get(1));
 
@@ -69,13 +71,13 @@ class ChunkBuilder {
                         if (!current.equals("x")) {
                             if (current.equals("c")) {
                                 Coin coin = new Coin(context);
-                                coin.setSize(new Vector2(120, 120));
-                                coin.setPosition(new Vector2(120 * x, 120 * y));
+                                coin.setSize(new Vector2(tileSize, tileSize));
+                                coin.setPosition(new Vector2(tileSize * x, tileSize * y));
                                 chunk.addObject(coin);
                             } else {
                                 GameObject tile = new GameObject(context);
-                                tile.setSize(new Vector2(120, 120));
-                                tile.setPosition(new Vector2(120 * x, 120 * y));
+                                tile.setSize(new Vector2(tileSize, tileSize));
+                                tile.setPosition(new Vector2(tileSize * x, tileSize * y));
                                 tile.setSprite("textures/world/tiles/" + current + ".png");
                                 chunk.addObject(tile);
                             }

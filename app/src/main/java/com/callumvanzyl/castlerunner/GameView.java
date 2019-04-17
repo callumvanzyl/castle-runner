@@ -1,6 +1,7 @@
 package com.callumvanzyl.castlerunner;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 

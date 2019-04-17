@@ -25,6 +25,8 @@ class GameThread implements Runnable {
     private boolean isRunning;
     private long previousTime;
 
+    Player player;
+
     private volatile ScheduledFuture<?> self;
 
     GameThread(GameContext gameContext) {
@@ -44,6 +46,10 @@ class GameThread implements Runnable {
 
         chunkManager = new ChunkManager(gameContext.getContext());
         chunkManager.changeScreenSize(screenSize);
+
+        player = new Player(gameContext.getContext());
+        player.setPosition(new Vector2(128, 600));
+        player.setSize(new Vector2(350, 350));
 
         isRunning = true;
 
@@ -70,10 +76,10 @@ class GameThread implements Runnable {
     private void drawGame(Canvas canvas) {
         Log.d("CR-GAMELOOP", "GameThread has invoked drawGame");
 
-        canvas.drawColor(Color.rgb(100, 149, 237));
-
         background.draw(canvas);
         chunkManager.drawChunks(canvas);
+
+        player.draw(canvas);
     }
 
     private void updateGame() {
@@ -87,6 +93,8 @@ class GameThread implements Runnable {
         if (deltaTime < 999) {
             background.update(deltaTime);
             chunkManager.updateChunks(deltaTime);
+
+            player.update(deltaTime);
         }
 
         previousTime = currentTime;

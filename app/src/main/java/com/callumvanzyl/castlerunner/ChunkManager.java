@@ -9,6 +9,7 @@ import java.util.Random;
 class ChunkManager {
 
     private static final int BUFFER_SIZE = 5;
+    private static final int TILE_SIZE = 120;
 
     private static final String[] ACTIVE_CHUNKS = {
             "data/chunks/flat-small",
@@ -17,8 +18,8 @@ class ChunkManager {
             "data/chunks/jumpy-small",
             "data/chunks/platforms-big",
             "data/chunks/platforms-small",
-            "data/chunks/treasure-hi",
-            "data/chunks/treasure-pyramid",
+            //"data/chunks/treasure-hi",
+            //"data/chunks/treasure-pyramid",
     };
 
     private Context context;
@@ -40,7 +41,7 @@ class ChunkManager {
         if (chunkQueue.size() > 0) {
             offset = offset.add(chunkQueue.get(chunkQueue.size()-1).getMaxBounds().x, 0);
         }
-        chunk.offsetChunk(offset.add(new Vector2(120, 0)));
+        chunk.offsetChunk(offset.add(new Vector2(TILE_SIZE, 0)));
         chunkQueue.add(chunk);
     }
 
@@ -61,7 +62,7 @@ class ChunkManager {
         }
 
         if (chunkQueue.size() > 0) {
-            if (chunkQueue.get(0).getMaxBounds().x + 120 < 0) {
+            if (chunkQueue.get(0).getMaxBounds().x + TILE_SIZE < 0) {
                 chunkQueue.remove(0);
             }
         }
@@ -88,4 +89,7 @@ class ChunkManager {
         }
     }
 
+    public static int getTileSize() {
+        return TILE_SIZE;
+    }
 }
