@@ -1,7 +1,6 @@
 package com.callumvanzyl.castlerunner;
 
 import android.graphics.Canvas;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -56,6 +55,12 @@ class ObjectBatch {
         }
 
         return new Vector2(minX, minY);
+    }
+
+    public Vector2 getSize() {
+        Vector2 max = getMaxBounds();
+        Vector2 min = getMinBounds();
+        return new Vector2(max.x - min.x, max.y - min.y);
     }
 
     public void drawBatch(Canvas canvas) {

@@ -43,6 +43,7 @@ class GameThread implements Runnable {
         background.setSprite("textures/world/background/full.png");
 
         chunkManager = new ChunkManager(gameContext.getContext());
+        chunkManager.changeScreenSize(screenSize);
 
         isRunning = true;
 

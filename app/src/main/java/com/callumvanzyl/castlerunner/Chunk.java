@@ -3,18 +3,19 @@ package com.callumvanzyl.castlerunner;
 import android.graphics.Canvas;
 
 class Chunk {
-    private Vector2 size;
 
     private ObjectBatch objectBatch;
 
-    Chunk(Vector2 size) {
-        this.size = size;
-
+    Chunk() {
         objectBatch = new ObjectBatch();
     }
 
     public void addObject(GameObject object) {
         objectBatch.addObject(object);
+    }
+
+    public void offsetChunk(Vector2 offset) {
+        objectBatch.offsetBatch(offset);
     }
 
     public Vector2 getMaxBounds() {
@@ -25,12 +26,8 @@ class Chunk {
         return objectBatch.getMinBounds();
     }
 
-    public void destroyChunk() {
-
-    }
-
-    public void offsetChunk(Vector2 offset) {
-        objectBatch.offsetBatch(offset);
+    public Vector2 getSize() {
+        return objectBatch.getSize();
     }
 
     public void drawChunk(Canvas canvas) {
