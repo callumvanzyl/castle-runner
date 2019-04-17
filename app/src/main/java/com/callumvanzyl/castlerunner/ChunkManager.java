@@ -8,16 +8,17 @@ import java.util.Random;
 
 class ChunkManager {
 
-    private static final int BUFFER_SIZE = 10;
+    private static final int BUFFER_SIZE = 5;
 
     private static final String[] ACTIVE_CHUNKS = {
-            "data/chunks/flat-big",
             "data/chunks/flat-small",
             "data/chunks/floaty-big",
             "data/chunks/jumpy-big",
             "data/chunks/jumpy-small",
             "data/chunks/platforms-big",
             "data/chunks/platforms-small",
+            "data/chunks/treasure-hi",
+            "data/chunks/treasure-pyramid",
     };
 
     private Context context;
@@ -39,7 +40,7 @@ class ChunkManager {
         if (chunkQueue.size() > 0) {
             offset = offset.add(chunkQueue.get(chunkQueue.size()-1).getMaxBounds().x, 0);
         }
-        chunk.offsetChunk(offset);
+        chunk.offsetChunk(offset.add(new Vector2(120, 0)));
         chunkQueue.add(chunk);
     }
 

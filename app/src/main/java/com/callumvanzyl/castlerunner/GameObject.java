@@ -9,7 +9,7 @@ import android.graphics.Rect;
 
 class GameObject implements Drawable, Updateable {
 
-    private static BitmapCache SHARED_CACHE = null;
+    protected static BitmapCache SHARED_CACHE = null;
     private static Paint PIXEL_PAINT = null;
 
     private Vector2 position;
@@ -74,6 +74,10 @@ class GameObject implements Drawable, Updateable {
     public void setSprite(String path) {
         this.sprite = SHARED_CACHE.get(path);
         this.sprite = Bitmap.createScaledBitmap(sprite, size.x, size.y, false);
+    }
+
+    public void setSprite(Bitmap sprite) {
+        this.sprite = sprite;
     }
 
 }

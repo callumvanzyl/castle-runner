@@ -67,12 +67,18 @@ class ChunkBuilder {
                         String current = all.get(i);
 
                         if (!current.equals("x")) {
-                            GameObject tile = new GameObject(context);
-                            tile.setSize(new Vector2(120, 120));
-                            tile.setPosition(new Vector2(120 * x, 120 * y));
-                            tile.setSprite("textures/world/tiles/" + current + ".png");
-
-                            chunk.addObject(tile);
+                            if (current.equals("c")) {
+                                Coin coin = new Coin(context);
+                                coin.setSize(new Vector2(120, 120));
+                                coin.setPosition(new Vector2(120 * x, 120 * y));
+                                chunk.addObject(coin);
+                            } else {
+                                GameObject tile = new GameObject(context);
+                                tile.setSize(new Vector2(120, 120));
+                                tile.setPosition(new Vector2(120 * x, 120 * y));
+                                tile.setSprite("textures/world/tiles/" + current + ".png");
+                                chunk.addObject(tile);
+                            }
                         }
 
                         i++;
