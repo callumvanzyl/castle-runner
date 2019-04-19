@@ -2,18 +2,23 @@ package com.callumvanzyl.castlerunner;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.util.Log;
+import android.support.v4.math.MathUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 class Player extends AnimatedObject {
 
+    private final static int MAX_VELOCITY = 100;
+    private final static int JUMP_VELOCITY = 90;
+
     private static boolean isInit = false;
 
     private ArrayList<Chunk> activeChunks = null;
 
-    private float jumpVelocity;
+    private boolean isCeiling;
+    private boolean isGrounded;
+    private float velocity;
 
     Player(Context context) {
         super(context);
@@ -77,40 +82,66 @@ class Player extends AnimatedObject {
             isInit = true;
         }
 
-        jumpVelocity = 0f;
+        velocity = 0f;
 
         setAnimation("player-run", true);
-    }
-
-    public boolean isGrounded() {
-        Rect tester = new Rect();
-        tester.set(getCollider());
-        tester.offset(0, 10);
-
-        if (activeChunks != null) {
-            for (Chunk chunk: activeChunks) {
-                for (GameObject object : chunk.getObjects()) {
-                    if (object.isColliding(tester)) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        if (!isGrounded()) {
-            jumpVelocity -= 1f;
-            int incrementY = (int) ((int) -jumpVelocity*(deltaTime/100));
-            setPosition(getPosition().add(0, incrementY));
-        } else {
-            jumpVelocity = 0;
+        isCeiling = false;
+        isGrounded = false;
+
+        Rect ceilingTester = new Rect();
+        ceilingTester.set(getCollider());
+        ceilingTester.offset(0, -2);
+        ceilingTester.bottom = ceilingTester.top + 20;
+
+        Rect groundTester = new Rect();
+        groundTester.set(getCollider());
+        groundTester.offset(0, 2);
+        groundTester.top = groundTester.bottom - 20;
+
+        if (activeChunks != null) {
+            for (Chunk chunk: activeChunks) {
+                for (int i = 0; i < chunk.getObjects().size(); i++) {
+                    GameObject object = chunk.getObjects().get(i);
+
+                    if (object.hasTag("Loot")) {
+                        if (object.isColliding(getCollider())) {
+                            chunk.removeObject(i);
+                            continue;
+                        }
+                    }
+
+                    if (object.hasTag(("Ground"))) {
+                        if (object.isColliding(ceilingTester)) {
+                            isCeiling = true;
+                        }
+                        if (object.isColliding(groundTester)) {
+                            isGrounded = true;
+                        }
+                    }
+
+                }
+            }
         }
+
+        if (isCeiling) {
+            velocity = -(velocity/2);
+        }
+
+        if (!isGrounded) {
+            velocity -= 2f;
+        } else {
+            velocity = JUMP_VELOCITY;
+        }
+
+        velocity = MathUtils.clamp(velocity, -MAX_VELOCITY, MAX_VELOCITY);
+        int incrementY = (int) ((int) -velocity*(deltaTime/100));
+        setPosition(getPosition().add(0, incrementY));
     }
 
     public void setActiveChunks(ArrayList<Chunk> activeChunks) {

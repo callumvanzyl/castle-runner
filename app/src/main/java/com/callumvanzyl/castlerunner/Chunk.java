@@ -32,6 +32,10 @@ class Chunk {
         return objectBatch.getObjects();
     }
 
+    public void removeObject(int i) {
+        objectBatch.removeObject(i);
+    }
+
     public Vector2 getSize() {
         return objectBatch.getSize();
     }

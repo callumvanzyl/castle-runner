@@ -71,9 +71,10 @@ class ChunkBuilder {
                         if (!current.equals("x")) {
                             if (current.equals("c")) {
                                 Coin coin = new Coin(context);
-                                coin.setCollidable(false);
+                                coin.setCollidable(true);
                                 coin.setSize(new Vector2(tileSize, tileSize));
                                 coin.setPosition(new Vector2(tileSize * x, tileSize * y));
+                                coin.addTag("Loot");
                                 chunk.addObject(coin);
                             } else {
                                 GameObject tile = new GameObject(context);
@@ -82,6 +83,7 @@ class ChunkBuilder {
                                 tile.setSize(new Vector2(tileSize, tileSize));
                                 tile.setPosition(new Vector2(tileSize * x, tileSize * y));
                                 tile.setSprite("textures/world/tiles/" + current + ".png");
+                                tile.addTag("Ground");
                                 chunk.addObject(tile);
                             }
                         }

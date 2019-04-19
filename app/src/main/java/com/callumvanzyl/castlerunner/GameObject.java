@@ -8,11 +8,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 class GameObject implements Drawable, Updateable {
 
-    private static final boolean DRAW_COLLIDERS = true;
+    private static final boolean DRAW_COLLIDERS = false;
 
     protected static BitmapCache sharedCache = null;
     private static Paint debugPaint = null;
@@ -26,6 +27,8 @@ class GameObject implements Drawable, Updateable {
     private Rect collider;
     private Bitmap sprite;
     private Rect surface;
+
+    private ArrayList<String> tags;
 
     private boolean isCollidable;
 
@@ -58,7 +61,17 @@ class GameObject implements Drawable, Updateable {
         setSprite("textures/placeholder.jpg");
         surface = new Rect();
 
+        tags = new ArrayList<>();
+
         isCollidable = false;
+    }
+
+    public void addTag(String tag) {
+        tags.add(tag);
+    }
+
+    public boolean hasTag(String tag) {
+        return tags.contains(tag);
     }
 
     public boolean isColliding(Rect rect) {

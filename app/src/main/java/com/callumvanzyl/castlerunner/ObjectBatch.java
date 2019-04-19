@@ -61,6 +61,10 @@ class ObjectBatch {
         return objects;
     }
 
+    public void removeObject(int i) {
+        objects.remove(i);
+    }
+
     public Vector2 getSize() {
         Vector2 max = getMaxBounds();
         Vector2 min = getMinBounds();

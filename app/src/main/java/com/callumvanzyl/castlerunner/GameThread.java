@@ -51,7 +51,7 @@ class GameThread implements Runnable {
         player = new Player(gameContext.getContext());
         player.setCollidable(true);
         player.setColliderSizeAndOffset(new Vector2(75, 125), new Vector2(130, 105));
-        player.setPosition(new Vector2(128, 0));
+        player.setPosition(new Vector2(128, 350));
         player.setSize(new Vector2(325, 325));
 
         isRunning = true;

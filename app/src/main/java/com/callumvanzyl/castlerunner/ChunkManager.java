@@ -13,13 +13,10 @@ class ChunkManager {
 
     private static final String[] ACTIVE_CHUNKS = {
             "data/chunks/flat-small",
-            //"data/chunks/floaty-big",
-            //"data/chunks/jumpy-big",
-            //"data/chunks/jumpy-small",
-            //"data/chunks/platforms-big",
-            //"data/chunks/platforms-small",
-            //"data/chunks/treasure-hi",
-            //"data/chunks/treasure-pyramid",
+            "data/chunks/flat-small-coins",
+            "data/chunks/floaty-big",
+            "data/chunks/jumpy-small",
+            "data/chunks/platforms-small"
     };
 
     private Context context;
