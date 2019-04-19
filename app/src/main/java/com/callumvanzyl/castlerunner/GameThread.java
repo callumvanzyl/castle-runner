@@ -42,14 +42,17 @@ class GameThread implements Runnable {
 
         background = new ScrollingBackground(gameContext.getContext(), 25);
         background.changeScreenSize(screenSize);
+        background.setCollidable(false);
         background.setSprite("textures/world/background/full.png");
 
         chunkManager = new ChunkManager(gameContext.getContext());
         chunkManager.changeScreenSize(screenSize);
 
         player = new Player(gameContext.getContext());
-        player.setPosition(new Vector2(128, 600));
-        player.setSize(new Vector2(350, 350));
+        player.setCollidable(true);
+        player.setColliderSizeAndOffset(new Vector2(75, 125), new Vector2(130, 105));
+        player.setPosition(new Vector2(128, 0));
+        player.setSize(new Vector2(325, 325));
 
         isRunning = true;
 
@@ -95,6 +98,7 @@ class GameThread implements Runnable {
             chunkManager.updateChunks(deltaTime);
 
             player.update(deltaTime);
+            player.setActiveChunks(chunkManager.getActiveChunks());
         }
 
         previousTime = currentTime;

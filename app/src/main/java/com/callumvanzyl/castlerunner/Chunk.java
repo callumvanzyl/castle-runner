@@ -2,6 +2,8 @@ package com.callumvanzyl.castlerunner;
 
 import android.graphics.Canvas;
 
+import java.util.ArrayList;
+
 class Chunk {
 
     private ObjectBatch objectBatch;
@@ -24,6 +26,10 @@ class Chunk {
 
     public Vector2 getMinBounds() {
         return objectBatch.getMinBounds();
+    }
+
+    public ArrayList<GameObject> getObjects() {
+        return objectBatch.getObjects();
     }
 
     public Vector2 getSize() {

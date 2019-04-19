@@ -13,11 +13,11 @@ class ChunkManager {
 
     private static final String[] ACTIVE_CHUNKS = {
             "data/chunks/flat-small",
-            "data/chunks/floaty-big",
-            "data/chunks/jumpy-big",
-            "data/chunks/jumpy-small",
-            "data/chunks/platforms-big",
-            "data/chunks/platforms-small",
+            //"data/chunks/floaty-big",
+            //"data/chunks/jumpy-big",
+            //"data/chunks/jumpy-small",
+            //"data/chunks/platforms-big",
+            //"data/chunks/platforms-small",
             //"data/chunks/treasure-hi",
             //"data/chunks/treasure-pyramid",
     };
@@ -87,6 +87,10 @@ class ChunkManager {
             int offsetX = (int) (50*(deltaTime/100));
             chunk.offsetChunk(new Vector2(-offsetX, 0));
         }
+    }
+
+    public ArrayList<Chunk> getActiveChunks() {
+        return chunkQueue;
     }
 
     public static int getTileSize() {

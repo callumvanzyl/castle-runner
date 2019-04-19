@@ -57,6 +57,10 @@ class ObjectBatch {
         return new Vector2(minX, minY);
     }
 
+    public ArrayList<GameObject> getObjects() {
+        return objects;
+    }
+
     public Vector2 getSize() {
         Vector2 max = getMaxBounds();
         Vector2 min = getMinBounds();

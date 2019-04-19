@@ -7,7 +7,7 @@
     tools:context=".GameOverlay" >
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/jumpButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="16dp"
@@ -42,7 +42,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/attackButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="90dp"
@@ -55,7 +55,7 @@
         app:srcCompat="@drawable/attack_standard" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/coinCounter"
         android:layout_width="100dp"
         android:layout_height="35dp"
         android:layout_marginTop="30dp"
