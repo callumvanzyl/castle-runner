@@ -29,6 +29,7 @@ class GameThread implements Runnable {
     Player player;
 
     Button jumpButton;
+    Button attackButton;
 
     private volatile ScheduledFuture<?> self;
 
@@ -53,14 +54,20 @@ class GameThread implements Runnable {
 
         player = new Player(gameContext);
         player.setCollidable(true);
-        player.setColliderSizeAndOffset(new Vector2(100, 140), new Vector2(50, 90));
+        player.setColliderSizeAndOffset(new Vector2(70, 160), new Vector2(50, 70));
         player.setPosition(new Vector2(128, 0));
         player.setSize(new Vector2(225, 225));
+        player.setVelocityEnabled(true);
 
         jumpButton = new Button(gameContext, "textures/ui/jump_pressed.png", "textures/ui/jump_standard.png");
         jumpButton.setPosition(new Vector2(screenSize.x - 250, screenSize.y - 250));
         jumpButton.setSize(new Vector2(200, 200));
         gameContext.setJumpButton(jumpButton);
+
+        attackButton = new Button(gameContext, "textures/ui/attack_standard.png", "textures/ui/attack_standard.png");
+        attackButton.setPosition(new Vector2(screenSize.x - 500, screenSize.y - 250));
+        attackButton.setSize(new Vector2(200, 200));
+        gameContext.setAttackButton(attackButton);
 
         isRunning = true;
 
@@ -82,6 +89,7 @@ class GameThread implements Runnable {
         chunkManager.changeScreenSize(screenSize);
 
         jumpButton.setPosition(new Vector2(screenSize.x - 250, screenSize.y - 250));
+        attackButton.setPosition(new Vector2(screenSize.x - 500, screenSize.y - 250));
 
         isRunning = true;
     }
@@ -95,6 +103,7 @@ class GameThread implements Runnable {
         player.draw(canvas);
 
         jumpButton.draw(canvas);
+        attackButton.draw(canvas);
     }
 
     private void updateGame() {
@@ -109,10 +118,11 @@ class GameThread implements Runnable {
             background.update(deltaTime);
             chunkManager.updateChunks(deltaTime);
 
+            GameObject.setActiveChunks(chunkManager.getActiveChunks());
             player.update(deltaTime);
-            player.setActiveChunks(chunkManager.getActiveChunks());
 
             jumpButton.update(deltaTime);
+            attackButton.update(deltaTime);
         }
 
         previousTime = currentTime;

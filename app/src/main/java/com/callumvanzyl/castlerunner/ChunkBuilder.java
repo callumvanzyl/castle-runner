@@ -77,6 +77,15 @@ class ChunkBuilder {
                                 coin.setPosition(new Vector2(tileSize * x, tileSize * y));
                                 coin.addTag("Loot");
                                 chunk.addObject(coin);
+                            } else if (current.equals("m")) {
+                                Skeleton skeleton = new Skeleton(gameContext);
+                                skeleton.setCollidable(true);
+                                skeleton.setColliderSizeAndOffset(new Vector2(85, 105), new Vector2(-10, -10));
+                                skeleton.setSize(new Vector2(100, 100));
+                                skeleton.setPosition(new Vector2(tileSize * x, tileSize * y));
+                                skeleton.addTag("Monster");
+                                skeleton.setVelocityEnabled(true);
+                                chunk.addObject(skeleton);
                             } else {
                                 GameObject tile = new GameObject(gameContext);
                                 tile.setCollidable(true);

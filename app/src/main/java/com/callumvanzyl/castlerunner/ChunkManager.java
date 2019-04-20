@@ -14,10 +14,13 @@ class ChunkManager {
     private boolean hasUpdated = false;
 
     private static final String[] ACTIVE_CHUNKS = {
+            "data/chunks/flat-monster",
             "data/chunks/flat-small",
             "data/chunks/flat-small-coins",
             "data/chunks/floaty-big",
+            "data/chunks/floaty-big-monster",
             "data/chunks/jumpy-small",
+            "data/chunks/platforms-monster",
             "data/chunks/platforms-small"
     };
 

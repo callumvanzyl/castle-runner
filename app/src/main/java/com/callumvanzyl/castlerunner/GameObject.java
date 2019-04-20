@@ -6,12 +6,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.v4.math.MathUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 class GameObject implements Drawable, Updateable {
 
     protected static final boolean DRAW_COLLIDERS = false;
+
+    private static ArrayList<Chunk> activeChunks = null;
 
     protected static BitmapCache sharedCache = null;
     private static Paint debugPaint = null;
@@ -31,6 +35,14 @@ class GameObject implements Drawable, Updateable {
     private ArrayList<String> tags;
 
     private boolean isCollidable;
+
+    private boolean velocityEnabled;
+    private float velocity;
+
+    private boolean isCeiling;
+    private boolean isGrounded;
+
+    private float fallingSpeed;
 
     GameObject(GameContext gameContext) {
         if (sharedCache == null) {
@@ -66,6 +78,11 @@ class GameObject implements Drawable, Updateable {
         tags = new ArrayList<>();
 
         isCollidable = false;
+
+        velocityEnabled = false;
+        velocity = 0;
+
+        fallingSpeed = 1f;
     }
 
     public void addTag(String tag) {
@@ -92,7 +109,64 @@ class GameObject implements Drawable, Updateable {
 
     @Override
     public void update(float deltaTime) {
+        if (isCollidable && velocityEnabled) {
+            isCeiling = false;
+            isGrounded = false;
 
+            Rect ceilingTester = new Rect();
+            ceilingTester.set(getCollider());
+            ceilingTester.bottom = ceilingTester.top + 10;
+
+            Rect groundTester = new Rect();
+            groundTester.set(getCollider());
+            groundTester.top = groundTester.bottom - 10;
+
+            if (GameObject.activeChunks != null) {
+                for (Chunk chunk: GameObject.activeChunks) {
+                    for (int i = 0; i < chunk.getObjects().size(); i++) {
+                        GameObject object = chunk.getObjects().get(i);
+                        if (object.hasTag(("Ground"))) {
+                            if (object.isColliding(ceilingTester)) {
+                                isCeiling = true;
+                                int correction = ceilingTester.top - object.getCollider().bottom;
+                                if (correction < 0) {
+                                    setPosition(getPosition().add(0, -correction));
+                                }
+                            }
+                            if (object.isColliding(groundTester)) {
+                                isGrounded = true;
+                                int correction = groundTester.bottom - object.getCollider().top;
+                                if (correction > 10) {
+                                    setPosition(getPosition().add(0, -correction));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            velocity = MathUtils.clamp(velocity, -200, 200);
+            int incrementY = (int) ((int) -velocity*(deltaTime/100));
+            setPosition(getPosition().add(0, incrementY));
+
+            if (isCeiling) {
+                velocity = -(velocity/2);
+            }
+
+            if (isGrounded) {
+                velocity = fallingSpeed;
+            } else {
+                velocity -= fallingSpeed;
+            }
+        }
+    }
+
+    public static ArrayList<Chunk> getActiveChunks() {
+        return activeChunks;
+    }
+
+    public static void setActiveChunks(ArrayList<Chunk> activeChunks) {
+        GameObject.activeChunks = activeChunks;
     }
 
     public Rect getCollider() {
@@ -144,4 +218,31 @@ class GameObject implements Drawable, Updateable {
         this.sprite = sprite;
     }
 
+    public boolean isVelocityEnabled() {
+        return velocityEnabled;
+    }
+
+    public void setVelocityEnabled(boolean velocityEnabled) {
+        this.velocityEnabled = velocityEnabled;
+    }
+
+    public float getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(float velocity) {
+        this.velocity = velocity;
+    }
+
+    public boolean isCeiling() {
+        return isCeiling;
+    }
+
+    public boolean isGrounded() {
+        return isGrounded;
+    }
+
+    public void setFallingSpeed(float fallingSpeed) {
+        this.fallingSpeed = fallingSpeed;
+    }
 }

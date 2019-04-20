@@ -16,6 +16,7 @@ class GameContext {
     private Vector2 fingerPosition;
 
     private Button jumpButton;
+    private Button attackButton;
 
     GameContext(GameView gameView, Context context, Handler messageHandler, SurfaceHolder surfaceHolder) {
         this.gameView = gameView;
@@ -54,6 +55,10 @@ class GameContext {
 
     public void setJumpButton(Button jumpButton) {
         this.jumpButton = jumpButton;
+    }
+
+    public void setAttackButton(Button attackButton) {
+        this.attackButton = attackButton;
     }
 
 }
