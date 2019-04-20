@@ -1,6 +1,5 @@
 package com.callumvanzyl.castlerunner;
 
-import android.content.Context;
 import android.content.res.AssetManager;
 
 import java.util.ArrayList;
@@ -11,16 +10,17 @@ class AnimatedObject extends GameObject {
     private static HashMap<String, Object> registeredAnimations = new HashMap<>();
     protected static ScaledBitmapCache sharedScaledCache = null;
 
+    private String currentAnimationName;
     private ArrayList<String> currentAnimationPaths;
     private float currentAnimationDelay;
     private float delayCounter;
     private int frameCounter;
 
-    AnimatedObject(Context context) {
-        super(context);
+    AnimatedObject(GameContext gameContext) {
+        super(gameContext);
 
         if (sharedScaledCache == null) {
-            AssetManager assetManager = context.getAssets();
+            AssetManager assetManager = gameContext.getContext().getAssets();
             sharedScaledCache = new ScaledBitmapCache(assetManager);
         }
 
@@ -42,6 +42,8 @@ class AnimatedObject extends GameObject {
             Object[] raw = (Object[]) registeredAnimations.get(id);
             currentAnimationPaths = (ArrayList<String>) raw[1];
             currentAnimationDelay = (float) raw[0];
+            currentAnimationName = id;
+            frameCounter = 0;
         }
     }
 
@@ -61,6 +63,10 @@ class AnimatedObject extends GameObject {
                 frameCounter++;
             }
         }
+    }
+
+    public String getCurrentAnimationName() {
+        return currentAnimationName;
     }
 
 }

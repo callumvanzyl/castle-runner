@@ -1,13 +1,11 @@
 package com.callumvanzyl.castlerunner;
 
-import android.content.Context;
-
 class ScrollingBackground extends GameObject {
 
     private int scrollingSpeed;
 
-    ScrollingBackground(Context context, int scrollingSpeed) {
-        super(context);
+    ScrollingBackground(GameContext gameContext, int scrollingSpeed) {
+        super(gameContext);
 
         this.scrollingSpeed = scrollingSpeed;
     }

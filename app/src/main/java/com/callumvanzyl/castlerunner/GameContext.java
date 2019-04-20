@@ -13,6 +13,10 @@ class GameContext {
     private Handler messageHandler;
     private SurfaceHolder surfaceHolder;
 
+    private Vector2 fingerPosition;
+
+    private Button jumpButton;
+
     GameContext(GameView gameView, Context context, Handler messageHandler, SurfaceHolder surfaceHolder) {
         this.gameView = gameView;
         this.context = context;
@@ -34,6 +38,22 @@ class GameContext {
 
     public SurfaceHolder getSurfaceHolder() {
         return surfaceHolder;
+    }
+
+    public Vector2 getFingerPosition() {
+        return fingerPosition;
+    }
+
+    public void setFingerPosition(Vector2 fingerPosition) {
+        this.fingerPosition = fingerPosition;
+    }
+
+    public Button getJumpButton() {
+        return jumpButton;
+    }
+
+    public void setJumpButton(Button jumpButton) {
+        this.jumpButton = jumpButton;
     }
 
 }

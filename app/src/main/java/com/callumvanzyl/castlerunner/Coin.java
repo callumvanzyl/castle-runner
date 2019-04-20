@@ -9,8 +9,8 @@ class Coin extends AnimatedObject {
 
     private static boolean isInit = false;
 
-    Coin(Context context) {
-        super(context);
+    Coin(GameContext gameContext) {
+        super(gameContext);
 
         if (!isInit) {
             AnimatedObject.registerAnimation(

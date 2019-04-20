@@ -1,16 +1,20 @@
 package com.callumvanzyl.castlerunner;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.v4.math.MathUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 class Player extends AnimatedObject {
 
-    private final static int MAX_VELOCITY = 100;
-    private final static int JUMP_VELOCITY = 90;
+    private final static int MAX_VELOCITY = 200;
+    private final static int JUMP_VELOCITY = 110;
 
     private static boolean isInit = false;
 
@@ -19,18 +23,35 @@ class Player extends AnimatedObject {
     private boolean isCeiling;
     private boolean isGrounded;
     private float velocity;
+    private float timeGrounded;
 
-    Player(Context context) {
-        super(context);
+    private boolean canJump;
+
+    private Rect ceilingTester;
+    private Rect groundTester;
+
+    Player(GameContext gameContext) {
+        super(gameContext);
 
         if (!isInit) {
             AnimatedObject.registerAnimation(
                     "player-attack",
-                    1f,
+                    0.1f,
                     new ArrayList<>(Arrays.asList(
-                            "textures/player/attack/1.png",
-                            "textures/player/attack/2.png",
-                            "textures/player/attack/3.png"
+                            "textures/player/attack/v2/1.png",
+                            "textures/player/attack/v2/2.png",
+                            "textures/player/attack/v2/3.png",
+                            "textures/player/attack/v2/4.png",
+                            "textures/player/attack/v2/5.png",
+                            "textures/player/attack/v2/6.png",
+                            "textures/player/attack/v2/7.png",
+                            "textures/player/attack/v2/8.png",
+                            "textures/player/attack/v2/9.png",
+                            "textures/player/attack/v2/10.png",
+                            "textures/player/attack/v2/11.png",
+                            "textures/player/attack/v2/12.png",
+                            "textures/player/attack/v2/13.png",
+                            "textures/player/attack/v2/14.png"
                     ))
             );
 
@@ -47,6 +68,15 @@ class Player extends AnimatedObject {
             );
 
             AnimatedObject.registerAnimation(
+                    "player-fall",
+                    1f,
+                    new ArrayList<>(Arrays.asList(
+                            "textures/player/fall/v2/1.png",
+                            "textures/player/fall/v2/2.png"
+                    ))
+            );
+
+            AnimatedObject.registerAnimation(
                     "player-idle",
                     1f,
                     new ArrayList<>(Arrays.asList(
@@ -58,10 +88,16 @@ class Player extends AnimatedObject {
                     "player-jump",
                     1f,
                     new ArrayList<>(Arrays.asList(
-                            "textures/player/jump/1.png",
-                            "textures/player/jump/2.png",
-                            "textures/player/jump/3.png",
-                            "textures/player/jump/4.png"
+                            "textures/player/jump/v2/1.png",
+                            "textures/player/jump/v2/2.png"
+                    ))
+            );
+
+            AnimatedObject.registerAnimation(
+                    "player-ouch",
+                    1f,
+                    new ArrayList<>(Arrays.asList(
+                            "textures/player/ouch/1.png"
                     ))
             );
 
@@ -69,13 +105,13 @@ class Player extends AnimatedObject {
                     "player-run",
                     1f,
                     new ArrayList<>(Arrays.asList(
-                            "textures/player/run/1.png",
-                            "textures/player/run/2.png",
-                            "textures/player/run/3.png",
-                            "textures/player/run/4.png",
-                            "textures/player/run/5.png",
-                            "textures/player/run/6.png",
-                            "textures/player/run/7.png"
+                            "textures/player/run/v2/1.png",
+                            "textures/player/run/v2/2.png",
+                            "textures/player/run/v2/3.png",
+                            "textures/player/run/v2/4.png",
+                            "textures/player/run/v2/5.png",
+                            "textures/player/run/v2/6.png",
+                            "textures/player/run/v2/7.png"
                     ))
             );
 
@@ -84,25 +120,43 @@ class Player extends AnimatedObject {
 
         velocity = 0f;
 
-        setAnimation("player-run", true);
+        canJump = true;
+
+        setAnimation("player-idle", true);
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+
+        if (DRAW_COLLIDERS) {
+            if (ceilingTester != null && groundTester != null) {
+                Paint paint = new Paint();
+                paint.setColor(Color.GREEN);
+                paint.setStyle(Paint.Style.FILL);
+
+                canvas.drawRect(ceilingTester, paint);
+                canvas.drawRect(groundTester, paint);
+            }
+        }
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+        Button jumpButton = gameContext.getJumpButton();
+
         isCeiling = false;
         isGrounded = false;
 
-        Rect ceilingTester = new Rect();
+        ceilingTester = new Rect();
         ceilingTester.set(getCollider());
-        ceilingTester.offset(0, -2);
-        ceilingTester.bottom = ceilingTester.top + 20;
+        ceilingTester.bottom = ceilingTester.top + 10;
 
-        Rect groundTester = new Rect();
+        groundTester = new Rect();
         groundTester.set(getCollider());
-        groundTester.offset(0, 2);
-        groundTester.top = groundTester.bottom - 20;
+        groundTester.top = groundTester.bottom - 10;
 
         if (activeChunks != null) {
             for (Chunk chunk: activeChunks) {
@@ -119,9 +173,14 @@ class Player extends AnimatedObject {
                     if (object.hasTag(("Ground"))) {
                         if (object.isColliding(ceilingTester)) {
                             isCeiling = true;
+                            int correction = ceilingTester.top - object.getCollider().bottom;
+                            if (correction < 0) {
+                                setPosition(getPosition().add(0, -correction));
+                            }
                         }
                         if (object.isColliding(groundTester)) {
                             isGrounded = true;
+                            int correction = groundTester.bottom - object.getCollider().top;
                         }
                     }
 
@@ -131,12 +190,41 @@ class Player extends AnimatedObject {
 
         if (isCeiling) {
             velocity = -(velocity/2);
+
+            if (!getCurrentAnimationName().equals("player-ouch")) {
+                setAnimation("player-ouch", true);
+            }
         }
 
-        if (!isGrounded) {
-            velocity -= 2f;
+        canJump = (timeGrounded > 0.5 && isGrounded);
+        jumpButton.setActive(!canJump);
+
+        if (isGrounded) {
+            if (!getCurrentAnimationName().equals("player-run")) {
+                setAnimation("player-run", true);
+            }
+            timeGrounded += (deltaTime / 100);
+            if (canJump && jumpButton.isTouched()) {
+                velocity = JUMP_VELOCITY;
+            } else {
+                velocity = 0;
+            }
         } else {
-            velocity = JUMP_VELOCITY;
+            if (velocity > 0) {
+                if (!getCurrentAnimationName().equals("player-jump")) {
+                    setAnimation("player-jump", true);
+                }
+            } else if (velocity < 0) {
+                if (!getCurrentAnimationName().equals("player-fall")) {
+                    setAnimation("player-fall", true);
+                }
+            }
+            timeGrounded = 0;
+            if (jumpButton.isTouched()) {
+                velocity -= 2f;
+            } else {
+                velocity -= 3f;
+            }
         }
 
         velocity = MathUtils.clamp(velocity, -MAX_VELOCITY, MAX_VELOCITY);

@@ -1,6 +1,5 @@
 package com.callumvanzyl.castlerunner;
 
-import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,15 +8,16 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 class GameObject implements Drawable, Updateable {
 
-    private static final boolean DRAW_COLLIDERS = false;
+    protected static final boolean DRAW_COLLIDERS = false;
 
     protected static BitmapCache sharedCache = null;
     private static Paint debugPaint = null;
     private static Paint pixelPaint = null;
+
+    protected GameContext gameContext;
 
     private Vector2 position;
     private Vector2 size;
@@ -32,9 +32,9 @@ class GameObject implements Drawable, Updateable {
 
     private boolean isCollidable;
 
-    GameObject(Context context) {
+    GameObject(GameContext gameContext) {
         if (sharedCache == null) {
-            AssetManager assetManager = context.getAssets();
+            AssetManager assetManager = gameContext.getContext().getAssets();
             sharedCache = new BitmapCache(assetManager);
         }
 
@@ -51,6 +51,8 @@ class GameObject implements Drawable, Updateable {
             pixelPaint.setDither(false);
             pixelPaint.setFilterBitmap(false);
         }
+
+        this.gameContext = gameContext;
 
         position = Vector2.ZERO;
         size = Vector2.ONE;

@@ -20,11 +20,11 @@ class ChunkBuilder {
 
     class BuilderThread extends Thread {
 
-        private Context context;
+        private GameContext gameContext;
         private String path;
 
-        BuilderThread(Context context, String path) {
-            this.context = context;
+        BuilderThread(GameContext gameContext, String path) {
+            this.gameContext = gameContext;
             this.path = path;
         }
 
@@ -34,7 +34,7 @@ class ChunkBuilder {
 
             Scanner scanner = null;
             try {
-                InputStream inputStream = context.getAssets().open(path);
+                InputStream inputStream = gameContext.getContext().getAssets().open(path);
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
                 String line = bufferedReader.readLine();
@@ -70,14 +70,15 @@ class ChunkBuilder {
 
                         if (!current.equals("x")) {
                             if (current.equals("c")) {
-                                Coin coin = new Coin(context);
+                                Coin coin = new Coin(gameContext);
                                 coin.setCollidable(true);
+                                coin.setColliderSizeAndOffset(new Vector2(65, 65), new Vector2(30, 30));
                                 coin.setSize(new Vector2(tileSize, tileSize));
                                 coin.setPosition(new Vector2(tileSize * x, tileSize * y));
                                 coin.addTag("Loot");
                                 chunk.addObject(coin);
                             } else {
-                                GameObject tile = new GameObject(context);
+                                GameObject tile = new GameObject(gameContext);
                                 tile.setCollidable(true);
                                 tile.setColliderSizeAndOffset(new Vector2(tileSize, tileSize), Vector2.ZERO);
                                 tile.setSize(new Vector2(tileSize, tileSize));
@@ -106,9 +107,9 @@ class ChunkBuilder {
         isBusy = false;
     }
 
-    public void generate(Context context, String path) {
+    public void generate(GameContext gameContext, String path) {
         isBusy = true;
-        BuilderThread builderThread = new BuilderThread(context, path);
+        BuilderThread builderThread = new BuilderThread(gameContext, path);
         builderThread.start();
     }
 

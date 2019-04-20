@@ -3,6 +3,7 @@ package com.callumvanzyl.castlerunner;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -27,6 +28,8 @@ class GameThread implements Runnable {
 
     Player player;
 
+    Button jumpButton;
+
     private volatile ScheduledFuture<?> self;
 
     GameThread(GameContext gameContext) {
@@ -40,19 +43,24 @@ class GameThread implements Runnable {
 
         screenSize = new Vector2(width, height);
 
-        background = new ScrollingBackground(gameContext.getContext(), 25);
+        background = new ScrollingBackground(gameContext, 25);
         background.changeScreenSize(screenSize);
         background.setCollidable(false);
         background.setSprite("textures/world/background/full.png");
 
-        chunkManager = new ChunkManager(gameContext.getContext());
+        chunkManager = new ChunkManager(gameContext);
         chunkManager.changeScreenSize(screenSize);
 
-        player = new Player(gameContext.getContext());
+        player = new Player(gameContext);
         player.setCollidable(true);
-        player.setColliderSizeAndOffset(new Vector2(75, 125), new Vector2(130, 105));
-        player.setPosition(new Vector2(128, 350));
-        player.setSize(new Vector2(325, 325));
+        player.setColliderSizeAndOffset(new Vector2(100, 140), new Vector2(50, 90));
+        player.setPosition(new Vector2(128, 0));
+        player.setSize(new Vector2(225, 225));
+
+        jumpButton = new Button(gameContext, "textures/ui/jump_pressed.png", "textures/ui/jump_standard.png");
+        jumpButton.setPosition(new Vector2(screenSize.x - 250, screenSize.y - 250));
+        jumpButton.setSize(new Vector2(200, 200));
+        gameContext.setJumpButton(jumpButton);
 
         isRunning = true;
 
@@ -73,6 +81,8 @@ class GameThread implements Runnable {
         background.changeScreenSize(screenSize);
         chunkManager.changeScreenSize(screenSize);
 
+        jumpButton.setPosition(new Vector2(screenSize.x - 250, screenSize.y - 250));
+
         isRunning = true;
     }
 
@@ -83,6 +93,8 @@ class GameThread implements Runnable {
         chunkManager.drawChunks(canvas);
 
         player.draw(canvas);
+
+        jumpButton.draw(canvas);
     }
 
     private void updateGame() {
@@ -99,6 +111,8 @@ class GameThread implements Runnable {
 
             player.update(deltaTime);
             player.setActiveChunks(chunkManager.getActiveChunks());
+
+            jumpButton.update(deltaTime);
         }
 
         previousTime = currentTime;

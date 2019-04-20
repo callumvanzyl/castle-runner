@@ -11,6 +11,8 @@ class ChunkManager {
     private static final int BUFFER_SIZE = 5;
     private static final int TILE_SIZE = 120;
 
+    private boolean hasUpdated = false;
+
     private static final String[] ACTIVE_CHUNKS = {
             "data/chunks/flat-small",
             "data/chunks/flat-small-coins",
@@ -19,15 +21,15 @@ class ChunkManager {
             "data/chunks/platforms-small"
     };
 
-    private Context context;
+    private GameContext gameContext;
 
     private ChunkBuilder chunkBuilder;
     private ArrayList<Chunk> chunkQueue;
 
     private Vector2 screenSize;
 
-    ChunkManager(Context context) {
-        this.context = context;
+    ChunkManager(GameContext gameContext) {
+        this.gameContext = gameContext;
 
         chunkBuilder = new ChunkBuilder();
         chunkQueue = new ArrayList<>();
@@ -54,8 +56,13 @@ class ChunkManager {
 
     public void updateChunks(float deltaTime) {
         if (!chunkBuilder.isBusy() && chunkBuilder.getGenerated().size() < BUFFER_SIZE) {
-            int rand = new Random().nextInt(ACTIVE_CHUNKS.length);
-            chunkBuilder.generate(context, ACTIVE_CHUNKS[rand]);
+            if (hasUpdated) {
+                int rand = new Random().nextInt(ACTIVE_CHUNKS.length);
+                chunkBuilder.generate(gameContext, ACTIVE_CHUNKS[rand]);
+            } else {
+                chunkBuilder.generate(gameContext, "data/chunks/flat-big");
+                hasUpdated = true;
+            }
         }
 
         if (chunkQueue.size() > 0) {

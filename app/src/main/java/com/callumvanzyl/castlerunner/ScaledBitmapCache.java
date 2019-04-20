@@ -30,8 +30,6 @@ class ScaledBitmapCache {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
-                Log.d("aa", "CACHE");
-
                 Bitmap image = BitmapFactory.decodeStream(inputStream, null, options);
                 image = Bitmap.createScaledBitmap(image, size.x, size.y, false);
                 cache.put(path, image);

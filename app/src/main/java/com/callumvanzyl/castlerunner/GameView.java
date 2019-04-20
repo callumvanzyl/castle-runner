@@ -1,7 +1,7 @@
 package com.callumvanzyl.castlerunner;
 
 import android.content.Context;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -44,4 +44,13 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
         gameThread.pauseGame();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+            gameContext.setFingerPosition(new Vector2((int) event.getX(), (int) event.getY()));
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            gameContext.setFingerPosition(Vector2.ZERO);
+        }
+        return true;
+    }
 }
