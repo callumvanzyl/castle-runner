@@ -1,10 +1,12 @@
 package com.callumvanzyl.castlerunner;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -21,12 +23,25 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
 
+    public void playGame() {
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        final ImageButton playButton = findViewById(R.id.playButton);
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playGame();
+            }
+        });
     }
 
     @Override

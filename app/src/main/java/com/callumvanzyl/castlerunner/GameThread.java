@@ -125,6 +125,13 @@ class GameThread implements Runnable {
             attackButton.update(deltaTime);
         }
 
+        final Runtime runtime = Runtime.getRuntime();
+        final long usedMemInMB=(runtime.totalMemory() - runtime.freeMemory()) / 1048576L;
+        final long maxHeapSizeInMB=runtime.maxMemory() / 1048576L;
+        final long availHeapSizeInMB = maxHeapSizeInMB - usedMemInMB;
+
+        Log.d("CR-PERFORMANCE", "Available memory: " + Long.toString(availHeapSizeInMB) + " MB");
+
         previousTime = currentTime;
     }
 

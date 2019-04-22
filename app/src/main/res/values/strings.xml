@@ -2,4 +2,6 @@
     <string name="app_name">Castle Runner</string>
 
     <string name="main_menu_hint">Hint: Hold the jump button in midair to gain more airtime!</string>
+
+    <string name="leaderboard_title">Leaderboard</string>
 </resources>

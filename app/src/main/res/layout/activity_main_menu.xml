@@ -7,53 +7,115 @@
     tools:context=".MainMenuActivity">
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="0dp"
+        android:id="@+id/background"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/castle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/castle_background" />
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:id="@+id/titlePanel"
+        android:layout_width="0dp"
+        android:layout_height="90dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:scaleType="fitXY"
-        android:src="@drawable/footer"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <ImageButton
+        android:id="@+id/playButton"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/hintText"
+        app:layout_constraintEnd_toStartOf="@+id/leaderboardButton"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titlePanel"
+        app:srcCompat="@drawable/green_button" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="casual"
+        android:text="Play"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/playButton"
+        app:layout_constraintEnd_toEndOf="@+id/playButton"
+        app:layout_constraintStart_toStartOf="@+id/playButton"
+        app:layout_constraintTop_toTopOf="@+id/playButton" />
+
+    <ImageButton
+        android:id="@+id/leaderboardButton"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/footerPanel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/playButton"
+        app:layout_constraintTop_toBottomOf="@+id/titlePanel"
+        app:layout_constraintVertical_bias="0.541"
+        app:srcCompat="@drawable/yellow_button" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="casual"
+        android:text="Leaderboard"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/leaderboardButton"
+        app:layout_constraintEnd_toEndOf="@+id/leaderboardButton"
+        app:layout_constraintStart_toStartOf="@+id/leaderboardButton"
+        app:layout_constraintTop_toTopOf="@+id/leaderboardButton" />
+
+    <ImageView
+        android:id="@+id/footerPanel"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/footer_panel" />
+
+    <TextView
+        android:id="@+id/hintText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="20dp"
         android:fontFamily="casual"
         android:text="@string/main_menu_hint"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/imageView" />
-
-    <ImageView
-        android:id="@+id/imageView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/logo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

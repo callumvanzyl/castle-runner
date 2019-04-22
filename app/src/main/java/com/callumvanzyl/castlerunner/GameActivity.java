@@ -27,6 +27,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        hideSystemUI();
+
         gameView = new GameView(this);
         setContentView(gameView);
 

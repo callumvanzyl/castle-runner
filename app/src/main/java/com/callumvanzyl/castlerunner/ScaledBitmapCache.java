@@ -7,10 +7,11 @@ import android.util.Log;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.WeakHashMap;
 
 class ScaledBitmapCache {
 
-    private HashMap<String, Bitmap> cache = new HashMap<>();
+    private WeakHashMap<String, Bitmap> cache = new WeakHashMap<>();
 
     private AssetManager assetManager;
 
@@ -28,7 +29,7 @@ class ScaledBitmapCache {
                 inputStream = assetManager.open(path);
 
                 BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
 
                 Bitmap image = BitmapFactory.decodeStream(inputStream, null, options);
                 image = Bitmap.createScaledBitmap(image, size.x, size.y, false);
