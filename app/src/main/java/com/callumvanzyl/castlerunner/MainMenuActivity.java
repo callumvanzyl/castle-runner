@@ -28,11 +28,17 @@ public class MainMenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void openLeaderboard() {
+        Intent intent = new Intent(this, LeaderboardActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
+        hideSystemUI();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         final ImageButton playButton = findViewById(R.id.playButton);
@@ -40,6 +46,14 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 playGame();
+            }
+        });
+
+        final ImageButton leaderboardButton = findViewById(R.id.leaderboardButton);
+        leaderboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openLeaderboard();
             }
         });
     }
@@ -51,4 +65,5 @@ public class MainMenuActivity extends AppCompatActivity {
             hideSystemUI();
         }
     }
+
 }

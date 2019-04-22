@@ -11,6 +11,8 @@ class ChunkManager {
     private static final int BUFFER_SIZE = 5;
     private static final int TILE_SIZE = 120;
 
+    private int scrollingSpeed;
+
     private boolean hasUpdated = false;
 
     private static final String[] ACTIVE_CHUNKS = {
@@ -91,9 +93,13 @@ class ChunkManager {
         for (Chunk chunk: chunkQueue) {
             chunk.updateChunk(deltaTime);
 
-            int offsetX = (int) (50*(deltaTime/100));
+            int offsetX = (int) (scrollingSpeed*(deltaTime/100));
             chunk.offsetChunk(new Vector2(-offsetX, 0));
         }
+    }
+
+    public void setScrollingSpeed(int scrollingSpeed) {
+        this.scrollingSpeed = scrollingSpeed;
     }
 
     public ArrayList<Chunk> getActiveChunks() {

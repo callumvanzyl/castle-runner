@@ -27,4 +27,7 @@ class ScrollingBackground extends GameObject {
         setPosition(new Vector2(newX, currentPosition.y));
     }
 
+    public void setScrollingSpeed(int scrollingSpeed) {
+        this.scrollingSpeed = scrollingSpeed;
+    }
 }

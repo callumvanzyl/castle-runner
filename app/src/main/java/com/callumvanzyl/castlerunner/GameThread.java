@@ -2,6 +2,9 @@ package com.callumvanzyl.castlerunner;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.support.v4.math.MathUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -26,10 +29,14 @@ class GameThread implements Runnable {
     private boolean isRunning;
     private long previousTime;
 
-    Player player;
+    private Player player;
 
-    Button jumpButton;
-    Button attackButton;
+    private Button jumpButton;
+    private Button attackButton;
+
+    private GameObject scorePanel;
+
+    private Paint scorePaint;
 
     private volatile ScheduledFuture<?> self;
 
@@ -50,6 +57,7 @@ class GameThread implements Runnable {
         background.setSprite("textures/world/background/full.png");
 
         chunkManager = new ChunkManager(gameContext);
+        chunkManager.setScrollingSpeed(50);
         chunkManager.changeScreenSize(screenSize);
 
         player = new Player(gameContext);
@@ -68,6 +76,16 @@ class GameThread implements Runnable {
         attackButton.setPosition(new Vector2(screenSize.x - 500, screenSize.y - 250));
         attackButton.setSize(new Vector2(200, 200));
         gameContext.setAttackButton(attackButton);
+
+        scorePanel = new UiElement(gameContext);
+        scorePanel.setPosition(new Vector2(screenSize.x - 750, 0));
+        scorePanel.setSize(new Vector2(750, 275));
+        scorePanel.setSprite("textures/ui/score_panel.png");
+
+        scorePaint = new Paint();
+        scorePaint.setColor(Color.WHITE);
+        scorePaint.setStyle(Paint.Style.FILL);
+        scorePaint.setTextSize(85);
 
         isRunning = true;
 
@@ -91,6 +109,8 @@ class GameThread implements Runnable {
         jumpButton.setPosition(new Vector2(screenSize.x - 250, screenSize.y - 250));
         attackButton.setPosition(new Vector2(screenSize.x - 500, screenSize.y - 250));
 
+        scorePanel.setPosition(new Vector2(screenSize.x - 750, 0));
+
         isRunning = true;
     }
 
@@ -104,6 +124,9 @@ class GameThread implements Runnable {
 
         jumpButton.draw(canvas);
         attackButton.draw(canvas);
+
+        scorePanel.draw(canvas);
+        canvas.drawText(Integer.toString(player.getScore()), screenSize.x - 500, 165, scorePaint);
     }
 
     private void updateGame() {
@@ -123,6 +146,11 @@ class GameThread implements Runnable {
 
             jumpButton.update(deltaTime);
             attackButton.update(deltaTime);
+
+            if (player.isDead()) {
+                chunkManager.setScrollingSpeed(0);
+                background.setScrollingSpeed(0);
+            }
         }
 
         final Runtime runtime = Runtime.getRuntime();

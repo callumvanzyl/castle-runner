@@ -16,6 +16,8 @@ class AnimatedObject extends GameObject {
     private float delayCounter;
     private int frameCounter;
 
+    private boolean loop;
+
     AnimatedObject(GameContext gameContext) {
         super(gameContext);
 
@@ -28,6 +30,8 @@ class AnimatedObject extends GameObject {
         currentAnimationDelay = 0;
         delayCounter = 0;
         frameCounter = 0;
+
+        loop = false;
     }
 
     public static void registerAnimation(String id, float delay, ArrayList<String> paths) {
@@ -44,7 +48,13 @@ class AnimatedObject extends GameObject {
             currentAnimationDelay = (float) raw[0];
             currentAnimationName = id;
             frameCounter = 0;
+
+            this.loop = loop;
         }
+    }
+
+    public boolean isAnimationDone() {
+        return frameCounter == currentAnimationPaths.size();
     }
 
     @Override
@@ -56,7 +66,11 @@ class AnimatedObject extends GameObject {
 
             if (delayCounter > currentAnimationDelay) {
                 if (frameCounter == currentAnimationPaths.size()) {
-                    frameCounter = 0;
+                    if (loop) {
+                        frameCounter = 0;
+                    } else {
+                        frameCounter = currentAnimationPaths.size()-1;
+                    }
                 }
                 setSprite(sharedScaledCache.get(currentAnimationPaths.get(frameCounter), getSize()));
                 delayCounter = 0;

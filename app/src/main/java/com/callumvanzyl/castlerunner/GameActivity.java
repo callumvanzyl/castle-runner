@@ -28,11 +28,10 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         hideSystemUI();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         gameView = new GameView(this);
         setContentView(gameView);
-
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     @Override

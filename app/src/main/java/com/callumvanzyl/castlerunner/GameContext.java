@@ -57,6 +57,10 @@ class GameContext {
         this.jumpButton = jumpButton;
     }
 
+    public Button getAttackButton() {
+        return attackButton;
+    }
+
     public void setAttackButton(Button attackButton) {
         this.attackButton = attackButton;
     }

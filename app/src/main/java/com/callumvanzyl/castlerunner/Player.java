@@ -1,6 +1,8 @@
 package com.callumvanzyl.castlerunner;
 
 import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,9 +14,14 @@ class Player extends AnimatedObject {
 
     private static boolean isInit = false;
 
+    private int score;
+    private boolean isDead;
+    private int worldHeight;
+
     private float timeGrounded;
 
     private boolean canJump;
+    private boolean isAttacking;
 
     Player(GameContext gameContext) {
         super(gameContext);
@@ -22,7 +29,7 @@ class Player extends AnimatedObject {
         if (!isInit) {
             AnimatedObject.registerAnimation(
                     "player-attack",
-                    0.1f,
+                    0.2f,
                     new ArrayList<>(Arrays.asList(
                             "textures/player/attack/v2/1.png",
                             "textures/player/attack/v2/2.png",
@@ -45,11 +52,16 @@ class Player extends AnimatedObject {
                     "player-die",
                     1f,
                     new ArrayList<>(Arrays.asList(
-                            "textures/player/die/1.png",
-                            "textures/player/die/2.png",
-                            "textures/player/die/3.png",
-                            "textures/player/die/4.png",
-                            "textures/player/die/5.png"
+                            "textures/player/die/v2/1.png",
+                            "textures/player/die/v2/2.png",
+                            "textures/player/die/v2/3.png",
+                            "textures/player/die/v2/4.png",
+                            "textures/player/die/v2/5.png",
+                            "textures/player/die/v2/6.png",
+                            "textures/player/die/v2/7.png",
+                            "textures/player/die/v2/8.png",
+                            "textures/player/die/v2/9.png",
+                            "textures/player/die/v2/10.png"
                     ))
             );
 
@@ -59,14 +71,6 @@ class Player extends AnimatedObject {
                     new ArrayList<>(Arrays.asList(
                             "textures/player/fall/v2/1.png",
                             "textures/player/fall/v2/2.png"
-                    ))
-            );
-
-            AnimatedObject.registerAnimation(
-                    "player-idle",
-                    1f,
-                    new ArrayList<>(Arrays.asList(
-                            "textures/player/idle/1.png"
                     ))
             );
 
@@ -96,19 +100,29 @@ class Player extends AnimatedObject {
             isInit = true;
         }
 
+        score = 0;
+        isDead = false;
+        worldHeight = Integer.MAX_VALUE;
+
         canJump = true;
 
-        setAnimation("player-idle", true);
+        setAnimation("player-fall", false);
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+
+        worldHeight = canvas.getHeight();
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+
+        Rect attackHitbox = new Rect();
+        attackHitbox.set(getCollider());
+        attackHitbox.right = attackHitbox.left + 150;
 
         if (getActiveChunks() != null) {
             for (Chunk chunk: getActiveChunks()) {
@@ -116,10 +130,47 @@ class Player extends AnimatedObject {
                     GameObject object = chunk.getObjects().get(i);
                     if (object.hasTag(("Loot"))) {
                         if (object.isColliding(getCollider())) {
+                            score += 1;
                             chunk.getObjects().remove(i);
                         }
                     }
+                    if (object.hasTag("Monster")) {
+                        if (isAttacking) {
+                            if (object.isColliding(attackHitbox)) {
+                                score += 5;
+                                chunk.getObjects().remove(i);
+                            }
+                        }
+                        if (object.isColliding(getCollider())) {
+                            isDead = true;
+                        }
+                    }
                 }
+            }
+        }
+
+        if (getPosition().y > worldHeight) {
+            isDead = true;
+        }
+
+        Button attackButton = gameContext.getAttackButton();
+
+        if (!isDead && attackButton.isTouched()) {
+            isAttacking = true;
+            if (!getCurrentAnimationName().equals("player-attack")) {
+                setAnimation("player-attack", false);
+            }
+        }
+
+        if (isAttacking) {
+            if (isAnimationDone()) {
+                isAttacking = false;
+            }
+        }
+
+        if (isDead) {
+            if (!getCurrentAnimationName().equals("player-die")) {
+                setAnimation("player-die", false);
             }
         }
 
@@ -130,21 +181,27 @@ class Player extends AnimatedObject {
 
         if (isGrounded()) {
             timeGrounded += (deltaTime / 100);
-            if (!getCurrentAnimationName().equals("player-run")) {
-                setAnimation("player-run", true);
+            if (!isAttacking && !isDead) {
+                if (!getCurrentAnimationName().equals("player-run")) {
+                    setAnimation("player-run", true);
+                }
             }
-            if (canJump && jumpButton.isTouched()) {
+            if (canJump && jumpButton.isTouched() && !isDead) {
                 setVelocity(JUMP_VELOCITY);
             }
         } else {
             timeGrounded = 0;
             if (getVelocity() > 0) {
-                if (!getCurrentAnimationName().equals("player-jump")) {
-                    setAnimation("player-jump", true);
+                if (!isAttacking && !isDead) {
+                    if (!getCurrentAnimationName().equals("player-jump")) {
+                        setAnimation("player-jump", true);
+                    }
                 }
             } else if (getVelocity() < 0) {
-                if (!getCurrentAnimationName().equals("player-fall")) {
-                    setAnimation("player-fall", true);
+                if (!isAttacking && !isDead) {
+                    if (!getCurrentAnimationName().equals("player-fall")) {
+                        setAnimation("player-fall", true);
+                    }
                 }
             }
             if (jumpButton.isTouched()) {
@@ -155,4 +212,11 @@ class Player extends AnimatedObject {
         }
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
 }
