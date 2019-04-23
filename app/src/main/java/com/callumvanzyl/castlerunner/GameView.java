@@ -1,9 +1,13 @@
 package com.callumvanzyl.castlerunner;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import org.mortbay.jetty.Main;
 
 class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -11,6 +15,8 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameThread gameThread = null;
 
     private boolean isGameInitialised;
+
+    public boolean isDone = false;
 
     GameView(Context context) {
         super(context);
@@ -46,11 +52,17 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
-            gameContext.setFingerPosition(new Vector2((int) event.getX(), (int) event.getY()));
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            gameContext.setFingerPosition(Vector2.ZERO);
+        if (gameContext.endGame) {
+            gameThread.end();
+            isDone = true;
+        } else {
+            if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+                gameContext.setFingerPosition(new Vector2((int) event.getX(), (int) event.getY()));
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                gameContext.setFingerPosition(Vector2.ZERO);
+            }
         }
+
         return true;
     }
 }

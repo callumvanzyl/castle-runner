@@ -1,10 +1,16 @@
 package com.callumvanzyl.castlerunner;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -23,6 +29,11 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    private void goToMainMenu() {
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +43,17 @@ public class GameActivity extends AppCompatActivity {
 
         gameView = new GameView(this);
         setContentView(gameView);
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (gameView != null && gameView.isDone) {
+                    gameView = null;
+
+                    goToMainMenu();
+                }
+            }
+        }, 0, 10);
     }
 
     @Override

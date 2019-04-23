@@ -18,6 +18,8 @@ class GameContext {
     private Button jumpButton;
     private Button attackButton;
 
+    public boolean endGame = false;
+
     GameContext(GameView gameView, Context context, Handler messageHandler, SurfaceHolder surfaceHolder) {
         this.gameView = gameView;
         this.context = context;

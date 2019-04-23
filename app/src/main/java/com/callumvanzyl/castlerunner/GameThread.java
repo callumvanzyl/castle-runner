@@ -38,6 +38,9 @@ class GameThread implements Runnable {
 
     private Paint scorePaint;
 
+    private UiElement deathSplash;
+    private float deathDelay = 17f;
+
     private volatile ScheduledFuture<?> self;
 
     GameThread(GameContext gameContext) {
@@ -87,6 +90,8 @@ class GameThread implements Runnable {
         scorePaint.setStyle(Paint.Style.FILL);
         scorePaint.setTextSize(85);
 
+        deathSplash = null;
+
         isRunning = true;
 
         self = executor.scheduleAtFixedRate(this, 0, TARGET_MSPF, TimeUnit.MILLISECONDS);
@@ -111,6 +116,10 @@ class GameThread implements Runnable {
 
         scorePanel.setPosition(new Vector2(screenSize.x - 750, 0));
 
+        if (deathSplash != null) {
+            deathSplash.setSize(screenSize);
+        }
+
         isRunning = true;
     }
 
@@ -127,6 +136,10 @@ class GameThread implements Runnable {
 
         scorePanel.draw(canvas);
         canvas.drawText(Integer.toString(player.getScore()), screenSize.x - 500, 165, scorePaint);
+
+        if (deathSplash != null) {
+            deathSplash.draw(canvas);
+        }
     }
 
     private void updateGame() {
@@ -150,6 +163,21 @@ class GameThread implements Runnable {
             if (player.isDead()) {
                 chunkManager.setScrollingSpeed(0);
                 background.setScrollingSpeed(0);
+
+                if (deathSplash == null) {
+                    if (deathDelay <= 0) {
+                        deathSplash = new UiElement(gameContext);
+                        deathSplash.setSize(screenSize);
+                        deathSplash.setSprite("textures/ui/death_splash.png");
+                        deathSplash.setCollidable(false);
+                    } else {
+                        deathDelay -= deltaTime/100;
+                    }
+                } else {
+                    if (deathSplash.isTouched()) {
+                        gameContext.endGame = true;
+                    }
+                }
             }
         }
 
@@ -161,6 +189,25 @@ class GameThread implements Runnable {
         Log.d("CR-PERFORMANCE", "Available memory: " + Long.toString(availHeapSizeInMB) + " MB");
 
         previousTime = currentTime;
+    }
+
+    public void end() {
+        if (self != null) {
+            pauseGame();
+            self.cancel(true);
+
+            background = null;
+            chunkManager = null;
+            player = null;
+            jumpButton = null;
+            attackButton = null;
+            scorePanel = null;
+
+            GameObject.emptyCache();
+            AnimatedObject.emptyCache();
+
+            self = null;
+        }
     }
 
     @Override

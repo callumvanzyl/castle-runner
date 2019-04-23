@@ -14,7 +14,7 @@ class ChunkBuilder {
 
     private static final String DELIMITER = "\t";
 
-    private volatile ArrayList<Chunk> generated = new ArrayList<>();
+    private ArrayList<Chunk> generated = new ArrayList<>();
 
     private boolean isBusy;
 

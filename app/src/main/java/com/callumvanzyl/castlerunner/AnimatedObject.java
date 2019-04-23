@@ -1,6 +1,7 @@
 package com.callumvanzyl.castlerunner;
 
 import android.content.res.AssetManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +52,10 @@ class AnimatedObject extends GameObject {
 
             this.loop = loop;
         }
+    }
+
+    public static void emptyCache() {
+        sharedCache.empty();
     }
 
     public boolean isAnimationDone() {

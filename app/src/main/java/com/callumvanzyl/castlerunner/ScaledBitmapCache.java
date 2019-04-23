@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.WeakHashMap;
 
 class ScaledBitmapCache {
@@ -40,6 +41,14 @@ class ScaledBitmapCache {
             }
         }
         return null;
+    }
+
+    public void empty() {
+        for(Map.Entry<String, Bitmap> entry : cache.entrySet()) {
+            Bitmap bm = entry.getValue();
+            bm.recycle();
+        }
+        cache.clear();
     }
 
 }

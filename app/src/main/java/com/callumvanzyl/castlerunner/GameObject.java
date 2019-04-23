@@ -161,6 +161,10 @@ class GameObject implements Drawable, Updateable {
         }
     }
 
+    public static void emptyCache() {
+        sharedCache.empty();
+    }
+
     public static ArrayList<Chunk> getActiveChunks() {
         return activeChunks;
     }
