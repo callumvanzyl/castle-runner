@@ -3,6 +3,7 @@ package com.callumvanzyl.castlerunner;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -11,6 +12,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -74,6 +78,9 @@ public class MainMenuActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        LeaderboardManager lm = new LeaderboardManager(this);
+        lm.getScores();
     }
 
     @Override

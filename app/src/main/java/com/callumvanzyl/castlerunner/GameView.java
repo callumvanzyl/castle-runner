@@ -1,13 +1,9 @@
 package com.callumvanzyl.castlerunner;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
-import org.mortbay.jetty.Main;
 
 class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -17,6 +13,8 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private boolean isGameInitialised;
 
     public boolean isDone = false;
+
+    public int playerScore = 0;
 
     GameView(Context context) {
         super(context);
@@ -53,6 +51,7 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (gameContext.endGame) {
+            playerScore = gameContext.getScore();
             gameThread.end();
             isDone = true;
         } else {

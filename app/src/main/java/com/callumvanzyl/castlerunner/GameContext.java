@@ -18,6 +18,8 @@ class GameContext {
     private Button jumpButton;
     private Button attackButton;
 
+    private int score = 0;
+
     public boolean endGame = false;
 
     GameContext(GameView gameView, Context context, Handler messageHandler, SurfaceHolder surfaceHolder) {
@@ -67,4 +69,11 @@ class GameContext {
         this.attackButton = attackButton;
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getScore() {
+        return score;
+    }
 }

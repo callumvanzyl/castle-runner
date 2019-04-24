@@ -41,6 +41,8 @@ public class GameActivity extends AppCompatActivity {
         hideSystemUI();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
+        final LeaderboardManager leaderboardManager = new LeaderboardManager(this);
+
         gameView = new GameView(this);
         setContentView(gameView);
 
@@ -48,6 +50,8 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (gameView != null && gameView.isDone) {
+                    leaderboardManager.postScore(gameView.playerScore);
+
                     gameView = null;
 
                     goToMainMenu();

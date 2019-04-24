@@ -124,6 +124,8 @@ class Player extends AnimatedObject {
         attackHitbox.set(getCollider());
         attackHitbox.right = attackHitbox.left + 150;
 
+        gameContext.setScore(score);
+
         if (getActiveChunks() != null) {
             for (Chunk chunk: getActiveChunks()) {
                 for (int i = 0; i < chunk.getObjects().size(); i++) {
